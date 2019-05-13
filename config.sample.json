@@ -1,0 +1,15 @@
+{
+    "homeserverUrl": "https://matrix.org",
+    "accessToken": "abcdef"
+    "rules": [
+        {
+            "room_is": [
+                "!gdRMqOrTFdOCYHNwOo:half-shot.uk"
+            ],
+            "text_contains": ["doggo", "pupper"],
+            "reaction": {
+                "key": "🐶"
+            }
+        }
+    ]
+}
