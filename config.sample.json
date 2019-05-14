@@ -1,6 +1,6 @@
 {
     "homeserverUrl": "https://matrix.org",
-    "accessToken": "abcdef"
+    "accessToken": "abcdef",
     "rules": [
         {
             "room_is": [
