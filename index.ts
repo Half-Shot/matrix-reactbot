@@ -1,5 +1,14 @@
-import { MatrixClient, SimpleFsStorageProvider, AutojoinRoomsMixin } from "matrix-bot-sdk";
+import { MatrixClient, SimpleFsStorageProvider, AutojoinRoomsMixin, LogService, ConsoleLogger } from "matrix-bot-sdk";
+import * as sdk from "matrix-bot-sdk";
 import config from "./config.json";
+
+const LOGLEVELS = {
+    "debug": 1,
+    "info": 2,
+    "warn": 3,
+    "error": 4,
+    "silent": 5,
+};
 
 async function main() {
     const client = new MatrixClient(
@@ -7,9 +16,30 @@ async function main() {
         config.accessToken,
         new SimpleFsStorageProvider("./store.db"),
     );
+    const logger = new ConsoleLogger();
+    const logLevel = (LOGLEVELS as any)[config.logLevel || "info"];
+    if (logLevel > 1) {
+        logger.debug = () => {};
+    }
+    if (logLevel > 2) {
+        logger.info = () => {};
+    }
+    if (logLevel > 3) {
+        logger.warn = () => {};
+    }
+    if (logLevel > 4) {
+        logger.error = () => {};
+    }
+    LogService.setLogger({
+        debug: () => {},
+        info: () => {},
+        warn: () => {},
+        error: () => {}
+    })
     AutojoinRoomsMixin.setupOnClient(client);
     client.on("room.message", async (roomId, event) => {
         console.log(`Got ${roomId} -> ${event.event_id} ${event.sender}`);
+        
         const body = event.content.body.toLowerCase() || "";
         console.log(event);
         const rules = config.rules.filter((rule) => {
